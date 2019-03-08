@@ -88,8 +88,57 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
       }
     }
 
-    "calculate due date" in {
+    "calculate due date" should {
+      "return due date based on submit date during work day in work hours" in {
+        val submitDate = LocalDateTime.of(2019, 3, 5, 10, 49, 0)
+        val turnAroundTime = 12
+        val calculator = new DueDateCalculator
+        val newHour = 14
+        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        calculator.checkWorkDay(dueDate) shouldBe true
+        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
+        dueDate.getHour shouldBe newHour
+        dueDate.getMinute shouldBe submitDate.getMinute
+      }
 
+      "return due date based on submit date during work day after work hours" in {
+        val submitDate = LocalDateTime.of(2019, 3, 6, 19, 5, 0)
+        val turnAroundTime = 8
+        val calculator = new DueDateCalculator
+        val newHour = 17
+        val newMinute = 0
+        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        calculator.checkWorkDay(dueDate) shouldBe true
+        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
+        dueDate.getHour shouldBe newHour
+        dueDate.getMinute shouldBe newMinute
+      }
+
+      "return due date based on submit date on Friday after work hours" in {
+        val submitDate = LocalDateTime.of(2019, 3, 8, 20, 14, 0)
+        val turnAroundTime = 12
+        val calculator = new DueDateCalculator
+        val newHour = 13
+        val newMinute = 0
+        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        calculator.checkWorkDay(dueDate) shouldBe true
+        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
+        dueDate.getHour shouldBe newHour
+        dueDate.getMinute shouldBe newMinute
+      }
+
+      "return due date based on submit date during non work days" in {
+        val submitDate = LocalDateTime.of(2019, 3, 2, 10, 49, 0)
+        val turnAroundTime = 20
+        val calculator = new DueDateCalculator
+        val newHour = 13
+        val newMinute = 0
+        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        calculator.checkWorkDay(dueDate) shouldBe true
+        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
+        dueDate.getHour shouldBe newHour
+        dueDate.getMinute shouldBe newMinute
+      }
     }
   }
 }

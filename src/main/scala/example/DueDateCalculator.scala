@@ -6,7 +6,20 @@ class DueDateCalculator {
   private val WORKDAY_END = LocalTime.of(17, 0, 0)
   private val NONWORKDAYS = List(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
 
-  def calculateDueDate(submitDate: LocalDateTime, turnAroundTime: Int): LocalDateTime = ???
+  def calculateDueDate(submitDate: LocalDateTime, turnAroundTime: Int): LocalDateTime = {
+    if (notDefined(submitDate)) {
+      throw new IllegalArgumentException("Submit date not defined")
+    } else {
+      if (!checkWorkHours(submitDate) && !checkTurnAroundTime(turnAroundTime)) {
+        throw new UnsupportedOperationException()
+      } else if (!checkWorkHours(submitDate) && checkTurnAroundTime(turnAroundTime)) {
+        val newSubmitDate = defineNewSubmitDate(submitDate)
+        newSubmitDate
+      } else {
+        submitDate
+      }
+    }
+  }
 
   private[example] def checkWorkDay(submitDate: LocalDateTime): Boolean = submitDate.getDayOfWeek match {
     case workday if !NONWORKDAYS.contains(workday) => true
@@ -36,5 +49,9 @@ class DueDateCalculator {
     case workDayAfterWorkHours if !checkWorkHours(workDayAfterWorkHours) =>
       workDayAfterWorkHours.plusDays(1).withHour(9)
     case _ => throw new UnsupportedOperationException()
+  }
+
+  private def notDefined(dateTime: LocalDateTime): Boolean = {
+    if (dateTime == null) true else false
   }
 }
