@@ -1,5 +1,5 @@
 package example
-import java.time.LocalDateTime
+import java.time.{DayOfWeek, LocalDateTime}
 
 import org.scalatest.{Matchers, WordSpec}
 
@@ -57,6 +57,34 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val turnAroundTime = 0
         val calculator = new DueDateCalculator
         calculator.checkTurnAroundTime(turnAroundTime) shouldBe false
+      }
+    }
+
+    "define new submit date if it fails the work day / work hour check" should {
+      "return next work day 9AM if the submit date is on work day after work hours" in {
+        val submitDate = LocalDateTime.of(2019, 3, 7, 18, 55, 0)
+        val calculator = new DueDateCalculator
+        val newSubmitDate = calculator.defineNewSubmitDate(submitDate)
+        calculator.checkWorkDay(newSubmitDate) shouldBe true
+        newSubmitDate.getHour shouldBe 9
+      }
+
+      "return next Monday 9AM if the submit date is on Friday after work hours" in {
+        val submitDate = LocalDateTime.of(2019, 3, 1, 21, 23, 0)
+        val calculator = new DueDateCalculator
+        val newSubmitDate = calculator.defineNewSubmitDate(submitDate)
+        calculator.checkWorkDay(newSubmitDate) shouldBe true
+        newSubmitDate.getDayOfWeek shouldBe DayOfWeek.MONDAY
+        newSubmitDate.getHour shouldBe 9
+      }
+
+      "return next Monday 9AM if the submit date is on a non work day" in {
+        val submitDate = LocalDateTime.of(2019, 3, 3, 10, 49, 0)
+        val calculator = new DueDateCalculator
+        val newSubmitDate = calculator.defineNewSubmitDate(submitDate)
+        calculator.checkWorkDay(newSubmitDate) shouldBe true
+        newSubmitDate.getDayOfWeek shouldBe DayOfWeek.MONDAY
+        newSubmitDate.getHour shouldBe 9
       }
     }
 
