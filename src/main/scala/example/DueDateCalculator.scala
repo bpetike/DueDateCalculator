@@ -23,5 +23,18 @@ class DueDateCalculator {
     case _ => false
   }
 
-  private[example] def defineNewSubmitDate(submitDate: LocalDateTime): LocalDateTime = ???
+  private[example] def defineNewSubmitDate(submitDate: LocalDateTime): LocalDateTime = submitDate match {
+    case fridayAfterWorkHours if !checkWorkHours(fridayAfterWorkHours) && fridayAfterWorkHours.getDayOfWeek == DayOfWeek.FRIDAY  =>
+      fridayAfterWorkHours.plusDays(3).withHour(9)
+    case nonWorkDay if !checkWorkDay(submitDate) =>
+      val newSubmitDate = nonWorkDay.getDayOfWeek match {
+        case DayOfWeek.SATURDAY => nonWorkDay.plusDays(2).withHour(9)
+        case DayOfWeek.SUNDAY => nonWorkDay.plusDays(1).withHour(9)
+        case _ => throw new UnsupportedOperationException()
+      }
+      newSubmitDate
+    case workDayAfterWorkHours if !checkWorkHours(workDayAfterWorkHours) =>
+      workDayAfterWorkHours.plusDays(1).withHour(9)
+    case _ => throw new UnsupportedOperationException()
+  }
 }
