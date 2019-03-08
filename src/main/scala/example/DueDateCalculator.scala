@@ -8,7 +8,10 @@ class DueDateCalculator {
 
   def calculateDueDate(submitDate: LocalDateTime, turnAroundTime: Int): LocalDateTime = ???
 
-  private[example] def checkWorkDay(submitDate: LocalDateTime): Boolean = ???
+  private[example] def checkWorkDay(submitDate: LocalDateTime): Boolean = submitDate.getDayOfWeek match {
+    case workday if !NONWORKDAYS.contains(workday) => true
+    case _ => false
+  }
 
   private[example] def checkWorkHours(submitDate: LocalDateTime): Boolean = ???
 
