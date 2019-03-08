@@ -48,7 +48,7 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
       }
 
       "return false if the given hours value is less than zero" in {
-        val turnAroundTime = 9
+        val turnAroundTime = -5
         val calculator = new DueDateCalculator
         calculator.checkTurnAroundTime(turnAroundTime) shouldBe false
       }

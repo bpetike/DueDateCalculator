@@ -18,7 +18,10 @@ class DueDateCalculator {
     case _ => false
   }
 
-  private[example] def checkTurnAroundTime(hours: Int): Boolean = ???
+  private[example] def checkTurnAroundTime(hours: Int): Boolean = hours match {
+    case valid if valid > 0 => true
+    case _ => false
+  }
 
   private[example] def defineNewSubmitDate(submitDate: LocalDateTime): LocalDateTime = ???
 }
