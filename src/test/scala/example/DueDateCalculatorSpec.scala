@@ -69,15 +69,6 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         newSubmitDate.getHour shouldBe 9
       }
 
-      "return next Monday 9AM if the submit date is on Friday after work hours" in {
-        val submitDate = LocalDateTime.of(2019, 3, 1, 21, 23, 0)
-        val calculator = new DueDateCalculator
-        val newSubmitDate = calculator.defineNewSubmitDate(submitDate)
-        calculator.checkWorkDay(newSubmitDate) shouldBe true
-        newSubmitDate.getDayOfWeek shouldBe DayOfWeek.MONDAY
-        newSubmitDate.getHour shouldBe 9
-      }
-
       "return next Monday 9AM if the submit date is on a non work day" in {
         val submitDate = LocalDateTime.of(2019, 3, 3, 10, 49, 0)
         val calculator = new DueDateCalculator
@@ -138,6 +129,18 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
         dueDate.getHour shouldBe newHour
         dueDate.getMinute shouldBe newMinute
+      }
+
+      "return correct due date if turnaround time is greater than 40" in {
+        val submitDate = LocalDateTime.of(2019, 3, 5, 10, 32, 0)
+        val turnAroundTime = 51
+        val calculator = new DueDateCalculator
+        val newHour = 13
+        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        calculator.checkWorkDay(dueDate) shouldBe true
+        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(8)
+        dueDate.getHour shouldBe newHour
+        dueDate.getMinute shouldBe submitDate.getMinute
       }
     }
   }
