@@ -5,9 +5,9 @@ import org.scalatest.{Matchers, WordSpec}
 
 class DueDateCalculatorSpec extends WordSpec with Matchers {
   "A DueDateCalculator" should {
-    "check if submit is on a work day" in {
+    "check if submit is on a work day" should  {
       "return true if submit date is a work day" in {
-        val submitDate = new LocalDateTime(2019, 3, 4, 5, 0, 0)
+        val submitDate = LocalDateTime.of(2019, 3, 4, 5, 0, 0)
         val calculator = new DueDateCalculator
         calculator.checkWorkDay(submitDate) shouldBe true
       }
