@@ -29,7 +29,7 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
       "return false if submit date is not in work hours on a work day" in {
         val submitDate = LocalDateTime.of(2019, 3, 7, 21, 34, 0)
         val calculator = new DueDateCalculator
-        calculator.checkWorkHours(submitDate) shouldBe true
+        calculator.checkWorkHours(submitDate) shouldBe false
       }
     }
 

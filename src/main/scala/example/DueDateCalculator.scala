@@ -13,7 +13,10 @@ class DueDateCalculator {
     case _ => false
   }
 
-  private[example] def checkWorkHours(submitDate: LocalDateTime): Boolean = ???
+  private[example] def checkWorkHours(submitDate: LocalDateTime): Boolean = submitDate match {
+    case workdayDate if checkWorkDay(workdayDate) => workdayDate.toLocalTime.isAfter(WORKDAY_BEGIN) && workdayDate.toLocalTime.isBefore(WORKDAY_END)
+    case _ => false
+  }
 
   private[example] def checkTurnAroundTime(hours: Int): Boolean = ???
 
