@@ -15,5 +15,7 @@ class DueDateCalculator {
 
   private[example] def checkWorkHours(submitDate: LocalDateTime): Boolean = ???
 
+  private[example] def checkTurnAroundTime(hours: Int): Boolean = ???
+
   private[example] def defineNewSubmitDate(submitDate: LocalDateTime): LocalDateTime = ???
 }
