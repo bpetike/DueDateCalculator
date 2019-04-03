@@ -4,6 +4,7 @@
 
 
 ### Prerequisites
+* Java 1.8
 * SBT
 
 To run the tests, type `sbt test`

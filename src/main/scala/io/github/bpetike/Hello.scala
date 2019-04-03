@@ -1,4 +1,4 @@
-package example
+package io.github.bpetike
 
 object Hello extends Greeting with App {
   println(greeting)

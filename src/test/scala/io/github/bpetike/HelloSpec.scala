@@ -1,4 +1,4 @@
-package example
+package io.github.bpetike
 
 import org.scalatest._
 

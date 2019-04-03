@@ -1,11 +1,12 @@
-package example
+package io.github.bpetike
+
 import java.time.{DayOfWeek, LocalDateTime}
 
 import org.scalatest.{Matchers, WordSpec}
 
 class DueDateCalculatorSpec extends WordSpec with Matchers {
   "A DueDateCalculator" should {
-    "check if submit is on a work day" should  {
+    "check if submit is on a work day" should {
       "return true if submit date is a work day" in {
         val submitDate = LocalDateTime.of(2019, 3, 4, 5, 0, 0)
         val calculator = new DueDateCalculator
@@ -38,7 +39,6 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         calculator.checkWorkHours(submitDate) shouldBe false
       }
     }
-
 
     "check if turnaround time is greater than zero" should {
       "return true if the given hours value is greater than zero" in {
@@ -85,7 +85,8 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val turnAroundTime = 12
         val calculator = new DueDateCalculator
         val newHour = 14
-        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        val dueDate =
+          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
         calculator.checkWorkDay(dueDate) shouldBe true
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
         dueDate.getHour shouldBe newHour
@@ -98,7 +99,8 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val calculator = new DueDateCalculator
         val newHour = 17
         val newMinute = 0
-        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        val dueDate =
+          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
         calculator.checkWorkDay(dueDate) shouldBe true
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
         dueDate.getHour shouldBe newHour
@@ -111,7 +113,8 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val calculator = new DueDateCalculator
         val newHour = 13
         val newMinute = 0
-        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        val dueDate =
+          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
         calculator.checkWorkDay(dueDate) shouldBe true
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
         dueDate.getHour shouldBe newHour
@@ -124,7 +127,8 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val calculator = new DueDateCalculator
         val newHour = 13
         val newMinute = 0
-        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        val dueDate =
+          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
         calculator.checkWorkDay(dueDate) shouldBe true
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
         dueDate.getHour shouldBe newHour
@@ -136,7 +140,8 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
         val turnAroundTime = 51
         val calculator = new DueDateCalculator
         val newHour = 13
-        val dueDate = calculator.calculateDueDate(submitDate, turnAroundTime)
+        val dueDate =
+          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
         calculator.checkWorkDay(dueDate) shouldBe true
         dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(8)
         dueDate.getHour shouldBe newHour
