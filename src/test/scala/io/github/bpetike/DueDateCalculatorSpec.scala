@@ -1,6 +1,6 @@
 package io.github.bpetike
 
-import java.time.{DayOfWeek, LocalDateTime}
+import java.time.{DayOfWeek, Instant, LocalDateTime, ZoneId, ZoneOffset}
 
 import org.scalatest.{Matchers, WordSpec}
 
@@ -82,70 +82,80 @@ class DueDateCalculatorSpec extends WordSpec with Matchers {
     "calculate due date" should {
       "return due date based on submit date during work day in work hours" in {
         val submitDate = LocalDateTime.of(2019, 3, 5, 10, 49, 0)
+        val submitDateInEpochSeconds = submitDate.toEpochSecond(ZoneOffset.UTC)
         val turnAroundTime = 12
         val calculator = new DueDateCalculator
         val newHour = 14
         val dueDate =
-          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
-        calculator.checkWorkDay(dueDate) shouldBe true
-        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
-        dueDate.getHour shouldBe newHour
-        dueDate.getMinute shouldBe submitDate.getMinute
+          calculator.calculateDueDate(submitDateInEpochSeconds, turnAroundTime)
+        val dueDateInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dueDate), ZoneId.of("GMT"))
+        calculator.checkWorkDay(dueDateInLocalDateTime) shouldBe true
+        dueDateInLocalDateTime.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
+        dueDateInLocalDateTime.getHour shouldBe newHour
+        dueDateInLocalDateTime.getMinute shouldBe submitDate.getMinute
       }
 
       "return due date based on submit date during work day after work hours" in {
         val submitDate = LocalDateTime.of(2019, 3, 6, 19, 5, 0)
+        val submitDateInEpochSeconds = submitDate.toEpochSecond(ZoneOffset.UTC)
         val turnAroundTime = 8
         val calculator = new DueDateCalculator
         val newHour = 17
         val newMinute = 0
         val dueDate =
-          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
-        calculator.checkWorkDay(dueDate) shouldBe true
-        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
-        dueDate.getHour shouldBe newHour
-        dueDate.getMinute shouldBe newMinute
+          calculator.calculateDueDate(submitDateInEpochSeconds, turnAroundTime)
+        val dueDateInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dueDate), ZoneId.of("GMT"))
+        calculator.checkWorkDay(dueDateInLocalDateTime) shouldBe true
+        dueDateInLocalDateTime.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(1)
+        dueDateInLocalDateTime.getHour shouldBe newHour
+        dueDateInLocalDateTime.getMinute shouldBe newMinute
       }
 
       "return due date based on submit date on Friday after work hours" in {
         val submitDate = LocalDateTime.of(2019, 3, 8, 20, 14, 0)
+        val submitDateInEpochSeconds = submitDate.toEpochSecond(ZoneOffset.UTC)
         val turnAroundTime = 12
         val calculator = new DueDateCalculator
         val newHour = 13
         val newMinute = 0
         val dueDate =
-          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
-        calculator.checkWorkDay(dueDate) shouldBe true
-        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
-        dueDate.getHour shouldBe newHour
-        dueDate.getMinute shouldBe newMinute
+          calculator.calculateDueDate(submitDateInEpochSeconds, turnAroundTime)
+        val dueDateInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dueDate), ZoneId.of("GMT"))
+        calculator.checkWorkDay(dueDateInLocalDateTime) shouldBe true
+        dueDateInLocalDateTime.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
+        dueDateInLocalDateTime.getHour shouldBe newHour
+        dueDateInLocalDateTime.getMinute shouldBe newMinute
       }
 
       "return due date based on submit date during non work days" in {
         val submitDate = LocalDateTime.of(2019, 3, 2, 10, 49, 0)
+        val submitDateInEpochSeconds = submitDate.toEpochSecond(ZoneOffset.UTC)
         val turnAroundTime = 20
         val calculator = new DueDateCalculator
         val newHour = 13
         val newMinute = 0
         val dueDate =
-          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
-        calculator.checkWorkDay(dueDate) shouldBe true
-        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
-        dueDate.getHour shouldBe newHour
-        dueDate.getMinute shouldBe newMinute
+          calculator.calculateDueDate(submitDateInEpochSeconds, turnAroundTime)
+        val dueDateInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dueDate), ZoneId.of("GMT"))
+        calculator.checkWorkDay(dueDateInLocalDateTime) shouldBe true
+        dueDateInLocalDateTime.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(4)
+        dueDateInLocalDateTime.getHour shouldBe newHour
+        dueDateInLocalDateTime.getMinute shouldBe newMinute
       }
 
       "return correct due date if turnaround time is greater than 40" in {
         val submitDate = LocalDateTime.of(2019, 3, 5, 10, 32, 0)
+        val submitDateInEpochSeconds = submitDate.toEpochSecond(ZoneOffset.UTC)
         val turnAroundTime = 51
         val calculator = new DueDateCalculator
         val newHour = 13
         val dueDate =
-          calculator.calculateDueDate(Some(submitDate), turnAroundTime)
-        calculator.checkWorkDay(dueDate) shouldBe true
-        dueDate.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(8)
-        dueDate.getHour shouldBe newHour
-        dueDate.getMinute shouldBe submitDate.getMinute
+          calculator.calculateDueDate(submitDateInEpochSeconds, turnAroundTime)
+        val dueDateInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dueDate), ZoneId.of("GMT"))
+        calculator.checkWorkDay(dueDateInLocalDateTime) shouldBe true
+        dueDateInLocalDateTime.getDayOfWeek shouldBe submitDate.getDayOfWeek.plus(8)
+        dueDateInLocalDateTime.getHour shouldBe newHour
+        dueDateInLocalDateTime.getMinute shouldBe submitDate.getMinute
       }
     }
   }

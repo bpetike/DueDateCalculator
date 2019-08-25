@@ -1,6 +1,6 @@
 package io.github.bpetike
 
-import java.time.{DayOfWeek, LocalDateTime, LocalTime}
+import java.time.{DayOfWeek, Instant, LocalDateTime, LocalTime, ZoneId, ZoneOffset}
 
 class DueDateCalculator {
   private val WORKDAY_BEGIN = LocalTime.of(9, 0, 0)
@@ -9,20 +9,18 @@ class DueDateCalculator {
   private val LENGTH_OF_WEEK = 7
   private val WORKHOURS_IN_A_WEEK = 40
 
-  def calculateDueDate(submitDate: Option[LocalDateTime],
-                       turnAroundTime: Int): LocalDateTime = {
+  def calculateDueDate(submitDateInEpochSeconds: Long,
+                       turnAroundTime: Int): Long = {
+    val submitDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(submitDateInEpochSeconds), ZoneId.of("GMT"))
     submitDate match {
-      case Some(value) =>
-        val afterWorkHours = !checkWorkHours(value) && checkTurnAroundTime(
-          turnAroundTime
-        )
+      case value =>
+        val afterWorkHours = !checkWorkHours(value) && checkTurnAroundTime(turnAroundTime)
         if (afterWorkHours) {
-          getSubmitDateAfterWorkHours(value, turnAroundTime)
+          getSubmitDateAfterWorkHours(value, turnAroundTime).toEpochSecond(ZoneOffset.UTC)
         } else {
-          getSubmitDateInWorkHours(value, turnAroundTime)
+          getSubmitDateInWorkHours(value, turnAroundTime).toEpochSecond(ZoneOffset.UTC)
         }
-      case None =>
-        throw new IllegalArgumentException("Submit date does not exist")
+      case _ => -1
     }
   }
 

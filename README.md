@@ -12,14 +12,16 @@ To run the tests, type `sbt test`
 ### Description
 
 This small application calculates due dates based on the submit date of an issue and
-the turnaround time estimated for the solution given in hours.
+the turnaround time estimated for the solution given in hours. **NOTE: The submit date is in the Unix
+epoch seconds format with the UTC/GMT timezone. The returned due date is also in that format.**
+If the submit date is not defined, or the turnaround time is less than or equal to 0, the program returns -1.
 
 #### Conditions
 
 * Working hours are 9AM to 5PM every working day (Monday through Friday)
 * The program does not deal with holidays, which means that a holiday on a Thursday is still
 considered as a working day by the program. Also a working Saturday will still be considered as
-a nonworking day by the system.
+a nonworking day by the program.
 * The turnaround time is given in working hours, which means for example that 2 days are 16
 hours. As an example: if a problem was reported at 2:12PM on Tuesday then it is due by
 2:12PM on Thursday.
